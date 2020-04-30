@@ -299,7 +299,50 @@
           })
         }
 
-        editor = new Quill(editorElem, config)
+
+          //Start Add hyperlink with class attribute
+          var Inline = Quill.import('blots/inline');
+          var __extends = (this && this.__extends) || (function () {
+              var extendStatics = Object.setPrototypeOf ||
+                  ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+                  function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+              return function (d, b) {
+                  extendStatics(d, b);
+                  function __() { this.constructor = d; }
+                  d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+              };
+          })();
+          var ExternalLink = /** @class */ (function (_super) {
+              __extends(ExternalLink, _super);
+              function ExternalLink() {
+                  return _super !== null && _super.apply(this, arguments) || this;
+              }
+              ExternalLink.create = function (value) {
+                  var node = _super.create.call(this, value);
+                  value = value.trim();
+                  if (!value.match(/^http|mailto/)) {
+                      value = 'http://' + value;
+                  }
+                  node.setAttribute('href', value);
+                  node.setAttribute('target', "_blank");
+                  node.setAttribute('class', "sw-attach-download");
+                  return node;
+              };
+              ExternalLink.formats = function (domNode) {
+                  return domNode.getAttribute('href');
+              };
+              return ExternalLink;
+          }(Inline));
+          ExternalLink.blotName = 'external_link';
+          ExternalLink.className = 'sw-attach-download';
+          ExternalLink.tagName = 'A';
+          Quill.register({
+              'formats/external_link': ExternalLink
+          });
+          //End Add hyperlink with class attribute
+
+
+          editor = new Quill(editorElem, config)
 
         this.ready = true
 
